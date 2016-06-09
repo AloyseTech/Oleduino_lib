@@ -109,7 +109,7 @@ class Oleduino
     String display_Running_Sketch (void);
 
 #ifndef SD_FAT_VERSION
-    void loadApp(String filename);
+    void loadApp(char* filename);
 #endif
   
   // library-accessible "private" interface

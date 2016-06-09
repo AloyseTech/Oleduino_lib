@@ -43,7 +43,11 @@ bool Oleduino::init()
     
     display.begin();
     display.fillScreen(0);
-
+    
+#ifndef SD_FAT_VERSION
+    SD.begin(SD_CS_PIN);
+#endif
+    
     Wire.begin();
     Wire.setClock(10000); // 200000 = around 1.2MHz, maximum is around 1.6Mhz with 3000000 clock value.
     if(!imu.begin())return false;
@@ -252,7 +256,7 @@ String Oleduino::display_Running_Sketch (void){
 }
 
 #ifndef SD_FAT_VERSION
-void Oleduino::loadApp(String filename)
+void Oleduino::loadApp(char* filename)
 {
     if (SD.exists("System/Loader/nextapp.txt"))
         SD.remove("System/Loader/nextapp.txt");
