@@ -7,17 +7,18 @@ Library for the OpenOledGamingConsole
 //#ifndef __SAMD21G18A__
 //  #error "This library is only for the Oleduino, which runs on SAMD21 ARM CPU Hardware! »
 //#endif
-
+#pragma once
 // ensure this library description is only included once
 #ifndef Oleduino_h
 #define Oleduino_h
 
+//#define DEBUG
+
 // include types & constants of arduino core API
 #include <arduino.h>
 
-#ifndef SD_FAT_VERSION
-#include <SD.h>
-#endif
+#include <SdFat.h>
+extern SdFat SD;
 
 #include "Oleduino_Pin_Map.h"
 #include "GFX.h"
@@ -86,7 +87,6 @@ class Oleduino
     //RTClock rtc;
     
     
-    
     //Constructor
     Oleduino();
 
@@ -94,7 +94,7 @@ class Oleduino
     void keyboard(char text[],uint8_t length, String title);
     
     //init
-    bool init(void);
+    bool init();
 /*
     //power management
     void deepSleep(void);
@@ -108,9 +108,7 @@ class Oleduino
     //Loader, SD, filesystem
     String display_Running_Sketch (void);
 
-#ifndef SD_FAT_VERSION
     void loadApp(char* filename);
-#endif
   
   // library-accessible "private" interface
   private:

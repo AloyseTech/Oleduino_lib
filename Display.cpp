@@ -24,7 +24,6 @@
 #include "pins_arduino.h"
 #include "wiring_private.h"
 #include <SPI.h>
-#include <SD.h>
 
 
 #ifndef _BV

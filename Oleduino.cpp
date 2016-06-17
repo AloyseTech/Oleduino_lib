@@ -40,13 +40,15 @@ bool Oleduino::init()
     pinMode(A0,OUTPUT);
     digitalWrite(A0, LOW);
     
+#ifndef DEBUG
+    SD.begin(SD_CS_PIN);
+#else
+    while(!SerialUSB);
+    SerialUSB.println("SD begin : " + String(SD.begin(SD_CS_PIN)));
+#endif
     
     display.begin();
     display.fillScreen(0);
-    
-#ifndef SD_FAT_VERSION
-    SD.begin(SD_CS_PIN);
-#endif
     
     Wire.begin();
     Wire.setClock(10000); // 200000 = around 1.2MHz, maximum is around 1.6Mhz with 3000000 clock value.
@@ -255,7 +257,7 @@ String Oleduino::display_Running_Sketch (void){
     return the_cpp_name.substring(0, dot_loc);
 }
 
-#ifndef SD_FAT_VERSION
+
 void Oleduino::loadApp(char* filename)
 {
     if (SD.exists("System/Loader/nextapp.txt"))
@@ -266,10 +268,11 @@ void Oleduino::loadApp(char* filename)
     executable.println(filename);
     executable.close();
     
+    SPI.end();
+    
     //reset GEMS to enter loader. The loader will find the instruction file with which .bin to execute.
     NVIC_SystemReset();
 }
-#endif
 
 
 /*
