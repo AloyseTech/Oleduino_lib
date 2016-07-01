@@ -40,6 +40,8 @@ public:
     void DMAC_Handler();
     void init();
     void end();
+    uint32_t done();
+    void disable();
     void spi_xfr(void *txdata, void *rxdata,  size_t n);
     void spi_write(void *data,  size_t n);
     void spi_read(void *data,  size_t n);

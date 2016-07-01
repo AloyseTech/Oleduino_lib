@@ -40,6 +40,14 @@ void DMA::init() {
     DMAC->BASEADDR.reg = (uint32_t)descriptor_section;
     DMAC->WRBADDR.reg = (uint32_t)wrb;
     DMAC->CTRL.reg = DMAC_CTRL_DMAENABLE | DMAC_CTRL_LVLEN(0xf);
+    
+    spi_xfr(txsrc,rxsink,1);
+    while(!done());
+    disable();
+}
+
+uint32_t DMA::done() {
+    return dmadone;
 }
 
 void DMA::end(){
@@ -100,8 +108,19 @@ void DMA::spi_xfr(void *txdata, void *rxdata,  size_t n) {
     DMAC->CHID.reg = DMAC_CHID_ID(chnlrx);
     DMAC->CHCTRLA.reg |= DMAC_CHCTRLA_ENABLE;
     
-    while(!dmadone);  // await DMA done isr
+    /*
+    while(!done());  // await DMA done isr
     
+    DMAC->CHID.reg = DMAC_CHID_ID(chnltx);   //disable DMA to allow lib SPI
+    DMAC->CHCTRLA.reg &= ~DMAC_CHCTRLA_ENABLE;
+    DMAC->CHID.reg = DMAC_CHID_ID(chnlrx);
+    DMAC->CHCTRLA.reg &= ~DMAC_CHCTRLA_ENABLE;
+     */
+    
+}
+
+void DMA::disable()
+{
     DMAC->CHID.reg = DMAC_CHID_ID(chnltx);   //disable DMA to allow lib SPI
     DMAC->CHCTRLA.reg &= ~DMAC_CHCTRLA_ENABLE;
     DMAC->CHID.reg = DMAC_CHID_ID(chnlrx);
